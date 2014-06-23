@@ -6463,7 +6463,7 @@ nv.models.twoLineChart = function() {
         g.select('.nv-legendWrap')
             .datum(data.map(function(series) {
               series.originalKey = series.originalKey === undefined ? series.key : series.originalKey;
-              series.key = series.originalKey + (series.bar ? ' (left axis)' : ' (right axis)');
+              series.key = series.originalKey   // + (series.bar ? ' (left axis)' : ' (right axis)');
               return series;
             }))
           .call(legend);
@@ -6493,14 +6493,14 @@ nv.models.twoLineChart = function() {
         .height(availableHeight)
         .color(data.map(function(d,i) {
           return d.color || color(d, i);
-        }).filter(function(d,i) { return !data[i].disabled && !data[i].bar }))
+        }).filter(function(d,i) { return !data[i].disabled }))
 
       lines2
         .width(availableWidth)
         .height(availableHeight)
         .color(data.map(function(d,i) {
           return d.color || color(d, i);
-        }).filter(function(d,i) { return !data[i].disabled && !data[i].bar }))
+        }).filter(function(d,i) { return !data[i].disabled }))
 
       var lines1Wrap = g.select('.nv-lines1Wrap')
           .datum(dataLines1[0] && !dataLines1[0].disabled ? dataLines1 : [{values:[]}] );

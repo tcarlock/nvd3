@@ -6330,11 +6330,11 @@ nv.models.twoLineChart = function() {
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState')
     ;
 
-  lines2
+  lines1
     .clipEdge(false)
     .padData(true)
     ;
-  lines1
+  lines2
     .clipEdge(false)
     .padData(true)
     ;
@@ -6430,8 +6430,8 @@ nv.models.twoLineChart = function() {
       var dataLines2 = data.filter(function(d) { return !d.bar });
 
       //x = xAxis.scale();
-       x = datalines1.filter(function(d) { return !d.disabled; }).length && datalines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : bars.xScale();
-      //x = datalines1.filter(function(d) { return !d.disabled; }).length ? lines1.xScale() : bars.xScale(); //old code before change above
+       x = datalines1.filter(function(d) { return !d.disabled; }).length && datalines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : lines2.xScale();
+      //x = datalines1.filter(function(d) { return !d.disabled; }).length ? lines1.xScale() : lines2.xScale(); //old code before change above
       y1 = lines1.yScale();
       y2 = lines2.yScale();
 
@@ -6635,7 +6635,7 @@ nv.models.twoLineChart = function() {
   chart.y2Axis = y2Axis;
 
   d3.rebind(chart, lines1, 'defined', 'size', 'clipVoronoi', 'interpolate');
-  //TODO: consider rebinding x, y and some other stuff, and simply do soemthign lile bars.x(lines1.x()), etc.
+  //TODO: consider rebinding x, y and some other stuff, and simply do soemthign lile lines2.x(lines1.x()), etc.
   //d3.rebind(chart, lines, 'x', 'y', 'size', 'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id');
 
   chart.options = nv.utils.optionsFunc.bind(chart);

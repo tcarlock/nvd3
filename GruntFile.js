@@ -28,6 +28,7 @@ module.exports = function(grunt) {
                      'src/models/legend.js',
                      'src/models/line.js',
                      'src/models/lineChart.js',
+                     'src/models/twoLineChart.js',
                      'src/models/linePlusBarChart.js',
                      'src/models/lineWithFocusChart.js',
                      'src/models/linePlusBarWithFocusChart.js',

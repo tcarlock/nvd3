@@ -6500,7 +6500,7 @@ nv.models.twoLineChart = function() {
         .height(availableHeight)
         .color(data.map(function(d,i) {
           return d.color || color(d, i);
-        }).filter(function(d,i) { return !data[i].disabled && data[i].bar }))
+        }).filter(function(d,i) { return !data[i].disabled && !data[i].bar }))
 
       var lines1Wrap = g.select('.nv-lines1Wrap')
           .datum(dataLines1[0] && !dataLines1[0].disabled ? dataLines1 : [{values:[]}] );

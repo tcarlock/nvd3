@@ -6426,8 +6426,8 @@ nv.models.twoLineChart = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      var dataLines1 = data[0]; // removed the !d.disabled clause here to fix Issue #240
-      var dataLines2 = data[1];
+      var dataLines1 = data[0].values; // removed the !d.disabled clause here to fix Issue #240
+      var dataLines2 = data[1].values;
 
       //x = xAxis.scale();
        x = dataLines1.filter(function(d) { return !d.disabled; }).length && dataLines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : lines2.xScale();

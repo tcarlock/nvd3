@@ -134,8 +134,8 @@ nv.models.twoLineChart = function() {
       var dataLines2 = data.filter(function(d) { return !d.bar });
 
       //x = xAxis.scale();
-       x = datalines1.filter(function(d) { return !d.disabled; }).length && datalines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : lines2.xScale();
-      //x = datalines1.filter(function(d) { return !d.disabled; }).length ? lines1.xScale() : lines2.xScale(); //old code before change above
+       x = dataLines1.filter(function(d) { return !d.disabled; }).length && dataLines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : lines2.xScale();
+      //x = dataLines1.filter(function(d) { return !d.disabled; }).length ? lines1.xScale() : lines2.xScale(); //old code before change above
       y1 = lines1.yScale();
       y2 = lines2.yScale();
 
@@ -248,7 +248,7 @@ nv.models.twoLineChart = function() {
         .tickSize(dataLines2.length ? 0 : -availableWidth, 0); // Show the y2 rules only if y1 has none
 
       g.select('.nv-y2.nv-axis')
-          .style('opacity', datalines1.length ? 1 : 0)
+          .style('opacity', dataLines1.length ? 1 : 0)
           .attr('transform', 'translate(' + availableWidth + ',0)');
           //.attr('transform', 'translate(' + x.range()[1] + ',0)');
 

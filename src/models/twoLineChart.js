@@ -144,8 +144,8 @@ nv.models.twoLineChart = function() {
       //------------------------------------------------------------
       // Setup containers and skeleton of chart
 
-      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-linePlusBar').data([data]);
-      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-linePlusBar').append('g');
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-twoLine').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-twoLine').append('g');
       var g = wrap.select('g');
 
       gEnter.append('g').attr('class', 'nv-x nv-axis');
@@ -209,8 +209,9 @@ nv.models.twoLineChart = function() {
       var lines1Wrap = g.select('.nv-lines1Wrap')
           .datum(dataLines1[0] && !dataLines1[0].disabled ? dataLines1 : [{values:[]}] );
 
+      debugger;
       var lines2Wrap = g.select('.nv-lines2Wrap')
-          .datum(dataLines2.length ? dataLines2 : [{values:[]}])
+          .datum(dataLines2[0] && !dataLines2[0].disabled ? dataLines2 : [{values:[]}] );
 
       d3.transition(lines1Wrap).call(lines1);
       d3.transition(lines2Wrap).call(lines2);

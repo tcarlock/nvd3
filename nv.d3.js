@@ -6426,8 +6426,8 @@ nv.models.twoLineChart = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      var dataLines1 = data.filter(function(d) { return !d.bar }); // removed the !d.disabled clause here to fix Issue #240
-      var dataLines2 = data.filter(function(d) { return !d.bar });
+      var dataLines1 = data[0]; // removed the !d.disabled clause here to fix Issue #240
+      var dataLines2 = data[1];
 
       //x = xAxis.scale();
        x = dataLines1.filter(function(d) { return !d.disabled; }).length && dataLines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : lines2.xScale();
@@ -6505,7 +6505,6 @@ nv.models.twoLineChart = function() {
       var lines1Wrap = g.select('.nv-lines1Wrap')
           .datum(dataLines1[0] && !dataLines1[0].disabled ? dataLines1 : [{values:[]}] );
 
-      debugger;
       var lines2Wrap = g.select('.nv-lines2Wrap')
           .datum(dataLines2[0] && !dataLines2[0].disabled ? dataLines2 : [{values:[]}] );
 

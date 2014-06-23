@@ -5,8 +5,8 @@ nv.models.twoLineChart = function() {
   // Public Variables with Default Settings
   //------------------------------------------------------------
 
-  var lines = nv.models.line()
-    , bars = nv.models.historicalBar()
+  var lines1 = nv.models.line()
+    , lines2 = nv.models.line()
     , xAxis = nv.models.axis()
     , y1Axis = nv.models.axis()
     , y2Axis = nv.models.axis()
@@ -34,10 +34,11 @@ nv.models.twoLineChart = function() {
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState')
     ;
 
-  bars
+  lines2
+    .clipEdge(false)
     .padData(true)
     ;
-  lines
+  lines1
     .clipEdge(false)
     .padData(true)
     ;
@@ -63,8 +64,8 @@ nv.models.twoLineChart = function() {
   var showTooltip = function(e, offsetElement) {
       var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
           top = e.pos[1] + ( offsetElement.offsetTop || 0),
-          x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
-          y = (e.series.bar ? y1Axis : y2Axis).tickFormat()(lines.y()(e.point, e.pointIndex)),
+          x = xAxis.tickFormat()(lines1.x()(e.point, e.pointIndex)),
+          y = (e.series.bar ? y1Axis : y2Axis).tickFormat()(lines1.y()(e.point, e.pointIndex)),
           content = tooltip(e.series.key, x, y, e, chart);
 
       nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's', null, offsetElement);
@@ -129,14 +130,14 @@ nv.models.twoLineChart = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      var dataBars = data.filter(function(d) { return !d.disabled && d.bar });
-      var dataLines = data.filter(function(d) { return !d.bar }); // removed the !d.disabled clause here to fix Issue #240
+      var dataLines1 = data.filter(function(d) { return !d.bar }); // removed the !d.disabled clause here to fix Issue #240
+      var dataLines2 = data.filter(function(d) { return !d.bar });
 
       //x = xAxis.scale();
-       x = dataLines.filter(function(d) { return !d.disabled; }).length && dataLines.filter(function(d) { return !d.disabled; })[0].values.length ? lines.xScale() : bars.xScale();
-      //x = dataLines.filter(function(d) { return !d.disabled; }).length ? lines.xScale() : bars.xScale(); //old code before change above
-      y1 = bars.yScale();
-      y2 = lines.yScale();
+       x = datalines1.filter(function(d) { return !d.disabled; }).length && datalines1.filter(function(d) { return !d.disabled; })[0].values.length ? lines1.xScale() : bars.xScale();
+      //x = datalines1.filter(function(d) { return !d.disabled; }).length ? lines1.xScale() : bars.xScale(); //old code before change above
+      y1 = lines1.yScale();
+      y2 = lines2.yScale();
 
       //------------------------------------------------------------
 
@@ -150,8 +151,8 @@ nv.models.twoLineChart = function() {
       gEnter.append('g').attr('class', 'nv-x nv-axis');
       gEnter.append('g').attr('class', 'nv-y1 nv-axis');
       gEnter.append('g').attr('class', 'nv-y2 nv-axis');
-      gEnter.append('g').attr('class', 'nv-barsWrap');
-      gEnter.append('g').attr('class', 'nv-linesWrap');
+      gEnter.append('g').attr('class', 'nv-lines1Wrap');
+      gEnter.append('g').attr('class', 'nv-lines2Wrap');
       gEnter.append('g').attr('class', 'nv-legendWrap');
 
       //------------------------------------------------------------
@@ -191,31 +192,28 @@ nv.models.twoLineChart = function() {
       // Main Chart Component(s)
 
 
-      lines
+      lines1
         .width(availableWidth)
         .height(availableHeight)
         .color(data.map(function(d,i) {
           return d.color || color(d, i);
         }).filter(function(d,i) { return !data[i].disabled && !data[i].bar }))
 
-      bars
+      lines2
         .width(availableWidth)
         .height(availableHeight)
         .color(data.map(function(d,i) {
           return d.color || color(d, i);
         }).filter(function(d,i) { return !data[i].disabled && data[i].bar }))
 
+      var lines1Wrap = g.select('.nv-lines1Wrap')
+          .datum(dataLines1[0] && !dataLines1[0].disabled ? dataLines1 : [{values:[]}] );
 
+      var lines2Wrap = g.select('.nv-lines2Wrap')
+          .datum(dataLines2.length ? dataLines2 : [{values:[]}])
 
-      var barsWrap = g.select('.nv-barsWrap')
-          .datum(dataBars.length ? dataBars : [{values:[]}])
-
-      var linesWrap = g.select('.nv-linesWrap')
-          .datum(dataLines[0] && !dataLines[0].disabled ? dataLines : [{values:[]}] );
-          //.datum(!dataLines[0].disabled ? dataLines : [{values:dataLines[0].values.map(function(d) { return [d[0], null] }) }] );
-
-      d3.transition(barsWrap).call(bars);
-      d3.transition(linesWrap).call(lines);
+      d3.transition(lines1Wrap).call(lines1);
+      d3.transition(lines2Wrap).call(lines2);
 
       //------------------------------------------------------------
 
@@ -240,17 +238,17 @@ nv.models.twoLineChart = function() {
         .tickSize(-availableWidth, 0);
 
       d3.transition(g.select('.nv-y1.nv-axis'))
-          .style('opacity', dataBars.length ? 1 : 0)
+          .style('opacity', dataLines2.length ? 1 : 0)
           .call(y1Axis);
 
 
       y2Axis
         .scale(y2)
         .ticks( availableHeight / 36 )
-        .tickSize(dataBars.length ? 0 : -availableWidth, 0); // Show the y2 rules only if y1 has none
+        .tickSize(dataLines2.length ? 0 : -availableWidth, 0); // Show the y2 rules only if y1 has none
 
       g.select('.nv-y2.nv-axis')
-          .style('opacity', dataLines.length ? 1 : 0)
+          .style('opacity', datalines1.length ? 1 : 0)
           .attr('transform', 'translate(' + availableWidth + ',0)');
           //.attr('transform', 'translate(' + x.range()[1] + ',0)');
 
@@ -302,21 +300,21 @@ nv.models.twoLineChart = function() {
   // Event Handling/Dispatching (out of chart's scope)
   //------------------------------------------------------------
 
-  lines.dispatch.on('elementMouseover.tooltip', function(e) {
+  lines1.dispatch.on('elementMouseover.tooltip', function(e) {
     e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
     dispatch.tooltipShow(e);
   });
 
-  lines.dispatch.on('elementMouseout.tooltip', function(e) {
+  lines1.dispatch.on('elementMouseout.tooltip', function(e) {
     dispatch.tooltipHide(e);
   });
 
-  bars.dispatch.on('elementMouseover.tooltip', function(e) {
+  lines2.dispatch.on('elementMouseover.tooltip', function(e) {
     e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
     dispatch.tooltipShow(e);
   });
 
-  bars.dispatch.on('elementMouseout.tooltip', function(e) {
+  lines2.dispatch.on('elementMouseout.tooltip', function(e) {
     dispatch.tooltipHide(e);
   });
 
@@ -334,14 +332,14 @@ nv.models.twoLineChart = function() {
   // expose chart's sub-components
   chart.dispatch = dispatch;
   chart.legend = legend;
-  chart.lines = lines;
-  chart.bars = bars;
+  chart.lines1 = lines1;
+  chart.lines2 = lines2;
   chart.xAxis = xAxis;
   chart.y1Axis = y1Axis;
   chart.y2Axis = y2Axis;
 
-  d3.rebind(chart, lines, 'defined', 'size', 'clipVoronoi', 'interpolate');
-  //TODO: consider rebinding x, y and some other stuff, and simply do soemthign lile bars.x(lines.x()), etc.
+  d3.rebind(chart, lines1, 'defined', 'size', 'clipVoronoi', 'interpolate');
+  //TODO: consider rebinding x, y and some other stuff, and simply do soemthign lile bars.x(lines1.x()), etc.
   //d3.rebind(chart, lines, 'x', 'y', 'size', 'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id');
 
   chart.options = nv.utils.optionsFunc.bind(chart);
@@ -349,16 +347,16 @@ nv.models.twoLineChart = function() {
   chart.x = function(_) {
     if (!arguments.length) return getX;
     getX = _;
-    lines.x(_);
-    bars.x(_);
+    lines1.x(_);
+    lines2.x(_);
     return chart;
   };
 
   chart.y = function(_) {
     if (!arguments.length) return getY;
     getY = _;
-    lines.y(_);
-    bars.y(_);
+    lines1.y(_);
+    lines2.y(_);
     return chart;
   };
 

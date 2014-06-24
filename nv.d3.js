@@ -6319,7 +6319,7 @@ nv.models.twoLineChart = function() {
     , tooltips = true
     , tooltip = function(key1, key2, x, y1, y2, e, graph) {
         return '<h3>' + x + '</h3>' +
-               '<p>' +  key1 + ': ' + y1 + '</p>';
+               '<p>' +  key1 + ': ' + y1 + '</p>' +
                '<p>' +  key2 + ': ' + y2 + '</p>';
       }
     , x

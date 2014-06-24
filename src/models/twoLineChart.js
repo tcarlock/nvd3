@@ -1,7 +1,7 @@
 
 nv.models.twoLineChart = function() {
   "use strict";
-  alert('test');
+
   //============================================================
   // Public Variables with Default Settings
   //------------------------------------------------------------
@@ -271,8 +271,6 @@ nv.models.twoLineChart = function() {
 
       dispatch.on('tooltipShow', function(e) {
         // if (tooltips) showTooltip(e, that.parentNode);
-
-        debugger;
 
         dispatch.tooltipShow({
           point: e.point,

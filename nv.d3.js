@@ -6362,8 +6362,8 @@ nv.models.twoLineChart = function() {
       var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
           top = e.pos[1] + ( offsetElement.offsetTop || 0),
           x = xAxis.tickFormat()(lines1.x()(e.point, e.pointIndex)),
-          y1 = y1Axis.tickFormat()(lines1.y()(e.point, e.pointIndex)),
-          y2 = y2Axis.tickFormat()(lines2.y()(e.point, e.pointIndex)),
+          y1 = y1Axis.tickFormat()(data[0].values[e.pointIndex][1]),
+          y2 = y2Axis.tickFormat()(data[1].values[e.pointIndex][1]),
           content = tooltip(data[0].key, data[1].key, x, y1, y2, e, chart);
 
       nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's', null, offsetElement);

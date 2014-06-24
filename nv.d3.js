@@ -6317,9 +6317,10 @@ nv.models.twoLineChart = function() {
     , color = nv.utils.defaultColor()
     , showLegend = true
     , tooltips = true
-    , tooltip = function(key, x, y, e, graph) {
-        return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>';
+    , tooltip = function(key1, key2, x, y1, y2, e, graph) {
+        return '<h3>' + x + '</h3>' +
+               '<p>' +  key1 + ': ' + y1 + '</p>';
+               '<p>' +  key2 + ': ' + y2 + '</p>';
       }
     , x
     , y1
@@ -6357,12 +6358,13 @@ nv.models.twoLineChart = function() {
   // Private Variables
   //------------------------------------------------------------
 
-  var showTooltip = function(e, offsetElement) {
+  var showTooltip = function(e, offsetElement, data) {
       var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
           top = e.pos[1] + ( offsetElement.offsetTop || 0),
           x = xAxis.tickFormat()(lines1.x()(e.point, e.pointIndex)),
-          y = (e.series.bar ? y1Axis : y2Axis).tickFormat()(lines1.y()(e.point, e.pointIndex)),
-          content = tooltip(e.series.key, x, y, e, chart);
+          y1 = y1Axis.tickFormat()(lines1.y()(e.point, e.pointIndex)),
+          y2 = y2Axis.tickFormat()(lines2.y()(e.point, e.pointIndex)),
+          content = tooltip(data[0].key, data[1].key, x, y1, y2, e, chart);
 
       nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's', null, offsetElement);
     }
@@ -6565,7 +6567,7 @@ nv.models.twoLineChart = function() {
       });
 
       dispatch.on('tooltipShow', function(e) {
-        if (tooltips) showTooltip(e, that.parentNode);
+        if (tooltips) showTooltip(e, that.parentNode, data);
       });
 
 

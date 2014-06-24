@@ -1,6 +1,7 @@
 
 nv.models.twoLineChart = function() {
   "use strict";
+  alert('test');
   //============================================================
   // Public Variables with Default Settings
   //------------------------------------------------------------
@@ -269,7 +270,17 @@ nv.models.twoLineChart = function() {
       });
 
       dispatch.on('tooltipShow', function(e) {
-        if (tooltips) showTooltip(e, that.parentNode);
+        // if (tooltips) showTooltip(e, that.parentNode);
+
+        debugger;
+
+        dispatch.tooltipShow({
+          point: e.point,
+          series: e.series,
+          pos: [e.pos[0] + margin.left, e.pos[1] + margin.top],
+          seriesIndex: e.seriesIndex,
+          pointIndex: e.pointIndex
+        });
       });
 
 
